@@ -13,59 +13,50 @@ const overlay = document.getElementById("overlay");
 const playerSection = document.querySelector(".player");
 const themeButton = document.getElementById("theme-toggle");
 const favoritesNavItem = document.getElementById("favorites");
-// References to the elements
 const searchBar = document.getElementById("searchbar");
 const recommendations = document.getElementById("recommendations");
 const allSongs = Array.from(songList.children);
 const filteredList = document.getElementById("filteredList");
-
-// Function to update recommendations
 searchBar.addEventListener("input", () => {
     const searchText = searchBar.value.toLowerCase().trim(); 
-    recommendations.innerHTML = ""; // Clear previous recommendations
+    recommendations.innerHTML = ""; 
 
-    // If there is input text, find matching songs
     if (searchText) {
         const matches = allSongs.filter(song => 
             song.textContent.toLowerCase().includes(searchText)
         );
 
         if (matches.length > 0) {
-            recommendations.style.display = "block"; // Show recommendations dropdown
+            recommendations.style.display = "block"; 
             matches.forEach(song => {
                 const recommendation = document.createElement("div");
                 recommendation.textContent = song.textContent;
                 recommendation.addEventListener("click", () => {
-                    searchBar.value = song.textContent; // Set clicked song as input
-                    recommendations.style.display = "none"; // Hide recommendations
+                    searchBar.value = song.textContent;
+                    recommendations.style.display = "none";
                     updateFilteredList(searchText);
                 });
                 recommendations.appendChild(recommendation);
             });
         } else {
-            recommendations.style.display = "none"; // Hide dropdown if no matches
+            recommendations.style.display = "none"; 
         }
     } else {
-        recommendations.style.display = "none"; // Hide dropdown if search text is empty
+        recommendations.style.display = "none"; 
     }
 });
 
-// Function to update filtered songs on Enter key press
 function updateFilteredList(searchText) {
-  filteredList.innerHTML = ""; // Clear previous filtered songs
+  filteredList.innerHTML = "";
 
-  // Find matching songs
   const matches = allSongs.filter(song =>
     song.textContent.toLowerCase().includes(searchText)
   );
 
-  // Update the filtered list
   if (matches.length > 0) {
     matches.forEach(song => {
       const listItem = document.createElement("li");
       listItem.textContent = song.textContent;
-
-      // Add event listener to play the song when clicked
       listItem.addEventListener("click", () => {
         const songIndex = songs.findIndex(s => s.title === song.textContent);
         if (songIndex !== -1) {
@@ -83,25 +74,22 @@ function updateFilteredList(searchText) {
     filteredList.appendChild(noMatch);
   }
 
-  recommendations.style.display = "none"; // Hide recommendations
+  recommendations.style.display = "none"; 
 }
 searchBar.addEventListener("keydown", (event) => {
   if (event.key === "Enter") {
-    event.preventDefault(); // Prevent form submission or default behavior
-    const searchText = searchBar.value.toLowerCase().trim(); // Get input and remove extra spaces
-    songList.innerHTML = ""; // Clear the current playlist
+    event.preventDefault(); 
+    const searchText = searchBar.value.toLowerCase().trim(); 
+    songList.innerHTML = "";
 
     if (searchText === "") {
-      // If search bar is cleared, show all songs
       songs.forEach(song => {
         const songItem = document.createElement("li");
         songItem.textContent = song.title;
         songItem.style.cursor = "pointer";
 
-        // Add heart icon for favorites
         createHeartIcon(songItem, song.title);
 
-        // Handle clicking a song
         songItem.addEventListener("click", () => {
           const songIndex = songs.findIndex(s => s.title === song.title);
           if (songIndex !== -1) {
@@ -115,23 +103,17 @@ searchBar.addEventListener("keydown", (event) => {
       });
     }
     else{
-    // Filter matching songs
     const filteredSongs = songs.filter(song =>
       song.title.toLowerCase().includes(searchText)
     );
 
-    
-    // Update the playlist with the filtered songs
     if (filteredSongs.length > 0) {
       filteredSongs.forEach(song => {
         const songItem = document.createElement("li");
         songItem.textContent = song.title;
         songItem.style.cursor = "pointer";
 
-        // Add heart icon for favorites
         createHeartIcon(songItem, song.title);
-
-        // Handle clicking a song
         songItem.addEventListener("click", () => {
           const songIndex = songs.findIndex(s => s.title === song.title);
           if (songIndex !== -1) {
@@ -151,78 +133,58 @@ searchBar.addEventListener("keydown", (event) => {
 }
 });
 
-
-
-
-
-
 let songs = Array.from(songList.children).map((song) => ({
   title: song.textContent,
   src: song.getAttribute("data-src"),
   language: song.getAttribute("data-language"),
 }));
 let currentIndex = 0;
-let favoriteSongs = []; // Array to hold favorite songs
-let currentFilter = "all"; // Variable to track current filter (e.g., "all", "hindi", "telugu", "english", "favorites")
+let favoriteSongs = []; 
+let currentFilter = "all";
 applyFilter();
 
-
-
-
-
-
-// Function to create heart icon for each song
 function createHeartIcon(songElement, songTitle) {
   const heartIcon = document.createElement("span");
   heartIcon.classList.add("heart");
-  heartIcon.style.cssText = 'cursor: pointer; margin-left: auto;'; // Position heart at the end of the song row
-  heartIcon.textContent = favoriteSongs.includes(songTitle) ? "💜" : "♡"; // Set initial state based on whether it's a favorite
+  heartIcon.style.cssText = 'cursor: pointer; margin-left: auto;';
+  heartIcon.textContent = favoriteSongs.includes(songTitle) ? "💜" : "♡"; 
   
   songElement.appendChild(heartIcon);
 
-  // Handle heart click
   heartIcon.addEventListener("click", () => {
     if (favoriteSongs.includes(songTitle)) {
-      // Remove from favorites
       favoriteSongs = favoriteSongs.filter((song) => song !== songTitle);
-      heartIcon.textContent = "♡"; // Change to unfilled heart outline
+      heartIcon.textContent = "♡"; 
       let cat = songTitle.getAttribute("data-language").split(" ");
       cat.pop();
       songTitle.setAttribute("data-language",cat.join(" "));
-      // applyFilter();
     } else {
-      // Add to favorites
       favoriteSongs.push(songTitle);
       heartIcon.textContent = "💜"; 
       songTitle.setAttribute("data-language","favorite");
-      // applyFilter();
     }
     applyFilter();
-    console.log("Favorite songs:", favoriteSongs); // For testing in the console
-    updateFavoritesNav(); // Update the favorites list in the nav
+    console.log("Favorite songs:", favoriteSongs); 
+    updateFavoritesNav(); 
   });
 }
 
-// Update the favorites in the navigation (favorites section in the navbar)
 function updateFavoritesNav() {
-  // Update the favorites nav item text
   favoritesNavItem.textContent = `Favorites (${favoriteSongs.length})`;
   updateFavoritesList();
 }
-
-// Show the favorites list in the nav only if there are any favorite songs
 let favoritesList = document.getElementsByClassName("heart");
   favoritesNavItem.addEventListener("click", () => {
   if (favoritesList.style.display === "none" || favoritesList.style.display === "") {
-    updateFavoritesList(); // Populate the favorites list
-    favoritesList.style.display = "block"; // Show the list
+    updateFavoritesList(); 
+    favoritesList.style.display = "block"; 
   } else {
-    favoritesList.style.display = "none"; // Hide the list
+    favoritesList.style.display = "none"; 
   }
 });
 
 function updateFavoritesList() {
-  favoritesList.innerHTML = ""; // Clear the current list
+  favoritesList.innerHTML = ""; 
 
   if (favoriteSongs.length === 0) {
     const emptyMessage = document.createElement("li");
@@ -231,14 +193,11 @@ function updateFavoritesList() {
     return;
   }
 
-  // document.getElementById('favo').innerHTML = "";
-
   favoriteSongs.forEach((songTitle) => {
     const favoriteItem = document.createElement("li");
     favoriteItem.setAttribute('data-language','favorite');
     favoriteItem.textContent = songTitle;
     favoriteItem.style.cursor = "pointer";
-    // Handle clicking a favorite song
     favoriteItem.addEventListener("click", () => {
       const songIndex = songs.findIndex((song) => song.title === songTitle);
       if (songIndex !== -1) {
@@ -254,7 +213,6 @@ function updateFavoritesList() {
     
   });
 }
-// Menu Toggle
 menuToggleButton.addEventListener("click", () => {
   navbar.classList.toggle("open");
   body.classList.toggle("menu-open");
@@ -263,7 +221,6 @@ menuToggleButton.addEventListener("click", () => {
   themeButton.classList.toggle("dimmed", navbar.classList.contains("open"));
 });
 
-// Close navbar when overlay is clicked
 overlay.addEventListener("click", () => {
   navbar.classList.remove("open");
   body.classList.remove("menu-open");
@@ -272,7 +229,6 @@ overlay.addEventListener("click", () => {
   themeButton.classList.remove("dimmed");
 });
 
-// Close navbar when a nav item is clicked
 navItems.forEach((item) => {
   item.addEventListener("click", () => {
     navbar.classList.remove("open");
@@ -281,44 +237,38 @@ navItems.forEach((item) => {
     playerSection.classList.remove("dimmed");
     themeButton.classList.remove("dimmed");
 
-    // Handle navigation item click
     handleNavItemClick(item);
   });
 });
 
-// Handle the navigation when clicking a nav item
 function handleNavItemClick(item) {
   const filter = item.getAttribute("data-filter");
-  currentFilter = filter; // Update the current filter
+  currentFilter = filter;
 
   console.log(currentFilter)
 
   applyFilter();
 }
 
-// Apply the current filter (e.g., "all", "hindi", "telugu", "favorites")
 function applyFilter() {
-  songList.innerHTML = ""; // Clear the current song list
+  songList.innerHTML = "";
 
   let filteredSongs = [];
 
   // if (currentFilter === "favorite") {
-  //   filteredSongs = songs.filter(song => song.language === currentFilter); // Show only favorite songs}
+  //   filteredSongs = songs.filter(song => song.language === currentFilter); }
   if (currentFilter === "all") {
-    filteredSongs = songs; // Show all songs
+    filteredSongs = songs; 
   } else {
-    filteredSongs = songs.filter(song => song.language === currentFilter); // Show songs for the selected language filter
+    filteredSongs = songs.filter(song => song.language === currentFilter);
   }
-
-  // Display filtered songs with heart icon
   filteredSongs.forEach((song) => {
     const songItem = document.createElement("li");
     songItem.textContent = song.title;
     songItem.style.cursor = "pointer";
     
-    // createHeartIcon(songItem, song.title); // Add heart icon next to song title
+    // createHeartIcon(songItem, song.title); 
     createHeartIcon(songItem,song.title);
-    // Handle clicking a song
     songItem.addEventListener("click", () => {
       const songIndex = songs.findIndex((s) => s.title === songItem.textContent);
       if (songIndex !== -1) {
@@ -331,33 +281,27 @@ function applyFilter() {
     songList.appendChild(songItem);
   });
 
-  // Reset to first song if there are filtered results
   if (filteredSongs.length > 0) {
     loadSong(0);
     playSong();
   }
 }
 
-// Load song
 function loadSong(index) {
   const song = songs[index];
   songTitle.textContent = song.title;
   audio.src = song.src;
 }
 
-// Play song
 function playSong() {
   audio.play();
   playBtn.textContent = "Pause";
 }
 
-// Pause song
 function pauseSong() {
   audio.pause();
   playBtn.textContent = "Play";
 }
-
-// Toggle play/pause
 playBtn.addEventListener("click", () => {
   if (audio.paused) {
     playSong();
@@ -366,26 +310,22 @@ playBtn.addEventListener("click", () => {
   }
 });
 
-// Next song
 nextBtn.addEventListener("click", () => {
   currentIndex = (currentIndex + 1) % songs.length;
   loadSong(currentIndex);
   playSong();
 });
 
-// Previous song
 prevBtn.addEventListener("click", () => {
   currentIndex = (currentIndex - 1 + songs.length) % songs.length;
   loadSong(currentIndex);
   playSong();
 });
 
-// Auto-play next song when the current song ends
 audio.addEventListener("ended", () => {
   nextBtn.click();
 });
 
-// Update song name on song selection
 songList.addEventListener("click", (e) => {
   if (e.target.tagName === "LI") {
     const selectedSong = e.target.textContent;
@@ -393,19 +333,14 @@ songList.addEventListener("click", (e) => {
   }
 });
 
-// Initial song loading for all songs
-applyFilter(); // Initially load all songs
-
-// Event listener for the theme toggle button
+applyFilter(); 
 themeToggleButton.addEventListener("click", () => {
-  // Toggle the 'light-theme' class on the body element
   body.classList.toggle("light-theme");
 
-  // Toggle button icon (optional)
   if (body.classList.contains("light-theme")) {
-    themeToggleButton.textContent = "🌞"; // Sun icon for light theme
+    themeToggleButton.textContent = "🌞"; 
   } else {
-    themeToggleButton.textContent = "🌙"; // Moon icon for dark theme
+    themeToggleButton.textContent = "🌙";
   }
 });
 // localStorage.setItem('theme',body.classList.contains('light-theme')?'light':'dark');
