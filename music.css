@@ -1,10 +1,8 @@
-/* Global reset for layout */
 * {
   user-select: none;
   box-sizing: border-box;
 }
 
-/* Basic body styling */
 body {
   font-family: 'Courier New', Courier, monospace;
   background-color: #1a1a1a;
@@ -13,13 +11,11 @@ body {
   padding: 0;
 }
 
-/* Light theme */
 body.light-theme {
   background-color: #ffffff;
   color: #333333;
 }
 
-/* Menu Button */
 .menu-btn {
   position: absolute;
   top: 10px;
@@ -40,29 +36,24 @@ body.light-theme {
   background-color: #732d91;
 }
 
-/* Navbar */
 .navbar {
   position: fixed;
   top: 0;
-  left: 0; /* Navbar always starts from the left */
-  width: 250px; /* Fixed width for the navbar */
+  left: 0; 
+  width: 250px; 
   height: 100%;
   background-color: #8e44ad;
-  /* background:linear-gradient(to right,#8e44ad,white 99%) ; */
   z-index: 20;
   display: flex;
   flex-direction: column;
   align-items: center;
   padding-top: 60px;
-  transition: left 0.3s ease; /* Smooth transition when toggling */
+  transition: left 0.3s ease; 
 }
-
-/* When navbar is open on small screens */
 .navbar.open {
-  left: 0; /* Open navbar */
+  left: 0; 
 }
 
-/* Navbar list */
 .navbar ul {
   list-style: none;
   padding: 0;
@@ -86,7 +77,6 @@ body.light-theme {
   color: #ccc;
 }
 
-/* Container */
 .container {
   max-width: 100%;
   margin: 0 auto;
@@ -97,7 +87,6 @@ body.light-theme {
   width: 100%;
 }
 
-/* Player */
 .player {
   position: sticky;
   top: 0;
@@ -118,7 +107,6 @@ body.light-theme .player {
   background-color: #ffffff;
 }
 
-/* Header */
 header h1 {
   color: #9b59b6;
   font-size: 2.5rem;
@@ -128,7 +116,6 @@ body.light-theme header h1 {
   color: #6a1b9a;
 }
 
-/* Heart Icon */
 .heart {
   display: inline-block;
   width: 20px;
@@ -167,7 +154,6 @@ body.light-theme header h1 {
   border-color: #e1e1e1;
 }
 
-/* Favorites & Song Title */
 #favorites {
   cursor: pointer;
   margin-left: 20px;
@@ -180,7 +166,6 @@ body.light-theme header h1 {
   margin-bottom: 10px;
 }
 
-/* Audio Controls */
 audio {
   width: 100%;
   height: 30px;
@@ -193,7 +178,6 @@ audio {
   gap: 10px;
 }
 
-/* Playlist */
 .playlist {
   text-align: left;
   margin-top: 20px;
@@ -234,7 +218,6 @@ body.light-theme #song-list li:hover {
   background-color: #8e44ad;
 }
 
-/* Theme Toggle Button */
 #theme-toggle {
   position: absolute;
   top: 10px;
@@ -267,7 +250,6 @@ body.light-theme #theme-toggle {
   background-color: #9b59b6;
 }
 
-/* Overlay */
 .overlay {
   display: none;
   position: fixed;
@@ -279,56 +261,41 @@ body.light-theme #theme-toggle {
   z-index: 5;
 }
 
-/* Media Queries */
-
-/* Large screens */
 @media (min-width: 768px) {
-  /* Hide the menu button on larger screens */
   .menu-btn {
     display: none;
   }
-
-  /* Navbar visible on larger screens */
   .navbar {
-    left: 0;  /* Always visible on large screens */
-    position: fixed;  /* Ensure the navbar stays fixed on the left */
-    width: 250px; /* Set fixed width */
-    height: 100%; /* Full height */
+    left: 0; 
+    position: fixed;  
+    width: 250px;
+    height: 100%;
     transition: none;
   }
-
-  /* Adjust container to take available width on large screens */
   .container {
-    width: calc(100% - 250px); /* Adjust container width to make room for the navbar */
-    margin-left: 250px; /* Make sure content starts after the navbar */
+    width: calc(100% - 250px);
+    margin-left: 250px;
   }
 
-  /* Adjust player to take the remaining space */
   .player {
     width: calc(100% - 250px);
-    max-width: none; /* Allow player to stretch fully */
+    max-width: none; 
   }
 }
-
-/* Small screens */
 @media (max-width: 767px) {
   .navbar {
-    left: -250px; /* Initially hidden offscreen */
-    transition: left 0.3s ease; /* Smooth transition for sliding effect */
+    left: -250px; 
+    transition: left 0.3s ease;
   }
 
-  /* Open navbar on small screens */
   .navbar.open {
-    left: 0; /* Open navbar */
+    left: 0;
   }
-
-  /* Container should take full width on smaller screens */
   .container {
     width: 100%;
     margin-left: 0;
   }
 
-  /* Player should take full width on smaller screens */
   .player {
     width: 100%;
     margin-left: 0;
