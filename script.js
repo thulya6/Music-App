@@ -299,6 +299,13 @@ async function applyFilter() {
   let filteredSongs = [];
 
   if (currentFilter === "all") {
+    const genres = ["hindi", "telugu", "english"];
+    const allGenreSongs = await Promise.all(genres.map(fetchSongsByGenre));
+    const allApiSongs = allGenreSongs.flat(); 
+    const apiUniqueSongs = allApiSongs.filter(
+      apiSong => !songs.some(localSong => localSong.title === apiSong.title)
+    );
+    songs = [...songs, ...apiUniqueSongs]; 
     filteredSongs = songs; 
   } else if (currentFilter === "favorites") {
     filteredSongs = songs.filter(song => favoriteSongs.includes(song.title));
